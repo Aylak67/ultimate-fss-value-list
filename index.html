@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ULTIMATE FSS VALUE LIST</title>
+    <style>
+        /* Базовые стили и кастомный скроллбар */
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, sans-serif;
+            background-color: #0b0d11;
+            color: #e2e8f0;
+            padding-top: 180px;
+            padding-bottom: 60px;
+
+            /* Яркий фон с картинкой bg.jpg */
+            background-image: linear-gradient(to bottom, rgba(11, 13, 17, 0.65), rgba(11, 13, 17, 0.88)), url('bg.jpg');
+            background-attachment: fixed;
+            background-size: cover;
+            background-position: center;
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0f1115;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #00ff88;
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00cc6e;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Жёстко фиксированная шапка сайта на самом верху */
+        .fixed-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 9999;
+            background: rgba(15, 17, 21, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 2px solid rgba(0, 255, 136, 0.2);
+            padding: 20px 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+            box-sizing: border-box;
+        }
+
+        header {
+            text-align: center;
+        }
+
+        header h1 {
+            color: #00ff88;
+            font-size: 2.6rem;
+            margin: 0 0 5px 0;
+            font-weight: 900;
+            letter-spacing: 1.5px;
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+        }
+
+        header p {
+            color: #a0aec0;
+            margin: 0 0 15px 0;
+            font-size: 1rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Поисковая строка */
+        .search-container {
+            position: relative;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 14px 20px;
+            background-color: #161920;
+            border: 2px solid #2d3139;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1.1rem;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #00ff88;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.2), inset 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Сетка карточек предметов */
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        /* Дизайн карточки */
+        .item-card {
+            background: linear-gradient(145deg, #161920, #111318);
+            border: 1px solid #252932;
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+            position: relative;
+        }
+
+        .item-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0, 255, 136, 0.15);
+        }
+
+        /* Контейнер для изображения предмета */
+        .item-image-box {
+            width: 100%;
+            height: 220px;
+            background-color: #1b1e25;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+            border-bottom: 1px solid #222630;
+        }
+
+        .item-image-box img {
+            max-width: 85%;
+            max-height: 85%;
+            object-fit: contain;
+            filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.5));
+            transition: transform 0.3s ease;
+        }
+
+        .item-card:hover .item-image-box img {
+            transform: scale(1.06);
+        }
+
+        .no-img-placeholder {
+            color: #4a5568;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        /* Информация о предмете */
+        .item-info {
+            padding: 22px;
+        }
+
+        .item-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin: 0 0 18px 0;
+            color: #fff;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 1rem;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .stat-label {
+            color: #94a3b8;
+            font-weight: 500;
+        }
+
+        .stat-value {
+            font-weight: 700;
+        }
+
+        /* Цвета характеристик */
+        .value-amount {
+            color: #00ff88;
+            font-size: 1.15rem;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
+        }
+
+        .demand-score {
+            color: #ffaa00;
+            text-shadow: 0 0 10px rgba(255, 170, 0, 0.2);
+            font-size: 1.05rem;
+        }
+
+        /* Стили для Rarity плашек */
+        .rarity-tag {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            z-index: 10;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Цвета неонового свечения редкостей */
+        .rarity-common {
+            background: #7e8590;
+            color: #fff;
+        }
+
+        .rarity-uncommon {
+            background: #2ecc71;
+            color: #fff;
+            box-shadow: 0 0 10px rgba(46, 204, 113, 0.4);
+        }
+
+        .rarity-epic {
+            background: #9b59b6;
+            color: #fff;
+            box-shadow: 0 0 10px rgba(155, 89, 182, 0.4);
+        }
+
+        .rarity-legendary {
+            background: #f1c40f;
+            color: #000;
+            box-shadow: 0 0 12px rgba(241, 196, 15, 0.5);
+        }
+
+        .rarity-exotic {
+            background: #e74c3c;
+            color: #fff;
+            box-shadow: 0 0 15px rgba(231, 76, 60, 0.6);
+        }
+
+        .rarity-limited {
+            background: #00eeee;
+            color: #000;
+            box-shadow: 0 0 15px rgba(0, 238, 238, 0.6);
+        }
+
+        .no-results {
+            text-align: center;
+            grid-column: 1 / -1;
+            font-size: 1.3rem;
+            color: #94a3b8;
+            padding: 60px;
+            display: none;
+        }
+
+        .loading {
+            text-align: center;
+            grid-column: 1 / -1;
+            font-size: 1.6rem;
+            color: #00ff88;
+            padding: 80px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Зафиксированная шапка -->
+    <div class="fixed-header">
+        <div class="container">
+            <header>
+                <h1>ULTIMATE FSS VALUE LIST</h1>
+                <p>Real-time item values & trading stats</p>
+            </header>
+
+            <div class="search-container">
+                <input type="text" id="searchBar" class="search-input" placeholder="Search item by name...">
+            </div>
+        </div>
+    </div>
+
+    <!-- Основная сетка -->
+    <div class="container">
+        <div class="items-grid" id="itemsGrid">
+            <div class="loading" id="loading">Loading database... 🚀</div>
+            <div class="no-results" id="noResults">No items found 🔍</div>
+        </div>
+    </div>
+
+    <script>
+        let allItems = [];
+
+        function loadItems() {
+            const loadingElement = document.getElementById('loading');
+
+            fetch("https://uuvjmqiqaxuhqyqapgqh.supabase.co/rest/v1/items?select=*", {
+                method: "GET",
+                headers: {
+                    "apikey": "sb_publishable_lVnTviN1ElQVy3EtJiuEiw_7vntzhn7",
+                    "Authorization": "Bearer sb_publishable_lVnTviN1ElQVy3EtJiuEiw_7vntzhn7"
+                }
+            })
+                .then(res => {
+                    if (!res.ok) throw new Error("Status " + res.status);
+                    return res.json();
+                })
+                .then(data => {
+                    allItems = data;
+                    loadingElement.style.display = 'none';
+                    displayItems(allItems);
+                })
+                .catch(err => {
+                    console.error(err);
+                    loadingElement.style.color = "#ff4a4a";
+                    loadingElement.innerText = "Database connection error ❌ Please refresh.";
+                });
+        }
+
+        function displayItems(items) {
+            const grid = document.getElementById('itemsGrid');
+            const noResults = document.getElementById('noResults');
+            const loading = document.getElementById('loading');
+
+            grid.innerHTML = '';
+            if (loading) grid.appendChild(loading);
+            grid.appendChild(noResults);
+
+            if (!items || items.length === 0) {
+                noResults.style.display = 'block';
+                return;
+            }
+            noResults.style.display = 'none';
+
+            items.forEach(item => {
+                // Классы редкости
+                const rarity = item.rarity ? item.rarity.toLowerCase() : 'common';
+                let rarityClass = 'rarity-common';
+                if (['uncommon', 'epic', 'legendary', 'exotic', 'limited'].includes(rarity)) {
+                    rarityClass = `rarity-${rarity}`;
+                }
+
+                // Добавление /10 к шкале спроса, если введено только число
+                let demandDisplay = item.demand || '0/10';
+                if (/^\d+(\.\d+)?$/.test(demandDisplay.trim())) {
+                    demandDisplay = `${demandDisplay.trim()}/10`;
+                }
+
+                const card = document.createElement('div');
+                card.className = 'item-card';
+
+                // Подсветка границ карточки под цвет редкости при наведении
+                card.addEventListener('mouseenter', () => {
+                    const colors = { common: '#7e8590', uncommon: '#2ecc71', epic: '#9b59b6', legendary: '#f1c40f', exotic: '#e74c3c', limited: '#00eeee' };
+                    card.style.borderColor = colors[rarity] || '#252932';
+                });
+                card.addEventListener('mouseleave', () => { card.style.borderColor = '#252932'; });
+
+                card.innerHTML = `
+                    <div class="rarity-tag ${rarityClass}">${item.rarity || 'Common'}</div>
+                    <div class="item-image-box">
+                        <img src="${item.image_url}" alt="${item.name}" onerror="this.onerror=null; this.parentElement.innerHTML='<span class=\'no-img-placeholder\'>No Image</span>';">
+                    </div>
+                    <div class="item-info">
+                        <p class="item-name">${item.name}</p>
+                        <div class="stat-row">
+                            <span class="stat-label">Value</span>
+                            <span class="stat-value value-amount">${item.value}</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">Demand</span>
+                            <span class="stat-value demand-score">${demandDisplay}</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">Stability</span>
+                            <span class="stat-value" style="color: #fff;">${item.stability || 'Stable'}</span>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        document.getElementById('searchBar').addEventListener('input', (e) => {
+            const searchString = e.target.value.toLowerCase();
+            const filtered = allItems.filter(item => item.name && item.name.toLowerCase().includes(searchString));
+            displayItems(filtered);
+        });
+
+        loadItems();
+    </script>
+</body>
+
+</html>
