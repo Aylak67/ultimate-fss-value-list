@@ -81,7 +81,6 @@
         .welcome-menu h1 span {
             color: #00ff88;
             display: block;
-            /* Скидывает FSS Value List на вторую строку */
             text-shadow: 0 0 25px rgba(0, 255, 136, 0.45);
             margin-top: 5px;
         }
@@ -451,16 +450,12 @@
 
 <body>
 
-    <!-- СТАРТОВОЕ МЕНЮ (ПЕРЕРАБОТАННЫЙ ДИЗАЙН) -->
     <div class="welcome-overlay" id="welcomeMenu">
         <div class="welcome-menu">
-            <!-- Разбили на 2 строки через тег span -->
             <h1>Welcome to <span>Ultimate FSS Value List</span></h1>
 
-            <!-- Основная кнопка входа -->
             <button class="menu-btn" onclick="enterSite()">View Value List 🚀</button>
 
-            <!-- Блок Discord -->
             <div class="discord-section">
                 <p class="discord-text">Support us by joining our discord server</p>
                 <a href="https://discord.gg/zwv6FGcGhy" target="_blank" class="discord-btn">
@@ -474,7 +469,6 @@
         </div>
     </div>
 
-    <!-- Фиксированная шапка -->
     <div class="fixed-header">
         <div class="container">
             <header>
@@ -488,7 +482,6 @@
         </div>
     </div>
 
-    <!-- Сетка -->
     <div class="container">
         <div class="items-grid" id="itemsGrid">
             <div class="loading" id="loading">Loading database... 🚀</div>
@@ -502,6 +495,16 @@
         }
 
         let allItems = [];
+
+        // Таблица приоритетов редкостей (Limited на самом верху)
+        const rarityPriority = {
+            'limited': 1,
+            'exotic': 2,
+            'legendary': 3,
+            'epic': 4,
+            'uncommon': 5,
+            'common': 6
+        };
 
         function loadItems() {
             const loadingElement = document.getElementById('loading');
@@ -517,7 +520,17 @@
                     return res.json();
                 })
                 .then(data => {
-                    allItems = data;
+                    // Автоматическая сортировка при получении базы
+                    allItems = data.sort((a, b) => {
+                        const rarityA = a.rarity ? a.rarity.toLowerCase().trim() : 'common';
+                        const rarityB = b.rarity ? b.rarity.toLowerCase().trim() : 'common';
+
+                        const priorityA = rarityPriority[rarityA] || 7;
+                        const priorityB = rarityPriority[rarityB] || 7;
+
+                        return priorityA - priorityB;
+                    });
+
                     loadingElement.style.display = 'none';
                     displayItems(allItems);
                 })
@@ -544,7 +557,7 @@
             noResults.style.display = 'none';
 
             items.forEach(item => {
-                const rarity = item.rarity ? item.rarity.toLowerCase() : 'common';
+                const rarity = item.rarity ? item.rarity.toLowerCase().trim() : 'common';
                 let rarityClass = 'rarity-common';
                 if (['uncommon', 'epic', 'legendary', 'exotic', 'limited'].includes(rarity)) {
                     rarityClass = `rarity-${rarity}`;
