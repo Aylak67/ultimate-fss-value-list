@@ -62,6 +62,7 @@
 
         header {
             text-align: center;
+            position: relative;
         }
 
         header h1 {
@@ -80,6 +81,33 @@
             font-weight: 500;
             text-transform: uppercase;
             letter-spacing: 1px;
+        }
+
+        /* Надпись курса валюты в шапке слева */
+        .value-rate-info {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #00ff88;
+            font-weight: 700;
+            font-size: 1.1rem;
+            background: rgba(0, 255, 136, 0.1);
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+            letter-spacing: 0.5px;
+        }
+
+        /* Адаптивность для курса при узком экране */
+        @media (max-width: 900px) {
+            .value-rate-info {
+                position: static;
+                transform: none;
+                display: inline-block;
+                margin-bottom: 15px;
+            }
         }
 
         /* Поисковая строка */
@@ -282,10 +310,11 @@
 
 <body>
 
-    <!-- Зафиксированная шапка -->
     <div class="fixed-header">
         <div class="container">
             <header>
+                <div class="value-rate-info">1 value = Bronze Bracelet [B]</div>
+
                 <h1>ULTIMATE FSS VALUE LIST</h1>
                 <p>Real-time item values & trading stats</p>
             </header>
@@ -296,7 +325,6 @@
         </div>
     </div>
 
-    <!-- Основная сетка -->
     <div class="container">
         <div class="items-grid" id="itemsGrid">
             <div class="loading" id="loading">Loading database... 🚀</div>
