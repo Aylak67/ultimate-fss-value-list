@@ -22,6 +22,82 @@
             background-position: center;
         }
 
+        /* Стиль СТАРТОВОГО ГЛАВНОГО МЕНЮ */
+        .welcome-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(11, 13, 17, 0.85), rgba(11, 13, 17, 0.98)), url('bg.jpg');
+            background-size: cover;
+            background-position: center;
+            z-index: 100000;
+            /* Перекрывает абсолютно всё */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .welcome-menu {
+            background: rgba(22, 25, 32, 0.9);
+            border: 2px solid rgba(0, 255, 136, 0.3);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(0, 255, 136, 0.1);
+            backdrop-filter: blur(10px);
+            box-sizing: border-box;
+        }
+
+        .welcome-menu h1 {
+            color: #00ff88;
+            font-size: 2.8rem;
+            margin: 0 0 10px 0;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+        }
+
+        .welcome-menu p {
+            color: #a0aec0;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin: 0 0 30px 0;
+        }
+
+        /* Кнопки в меню */
+        .menu-btn {
+            background: #00ff88;
+            color: #000;
+            border: none;
+            padding: 16px 35px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 255, 136, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .menu-btn:hover {
+            background: #00cc6e;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 255, 136, 0.5);
+        }
+
+        /* Состояние скрытого меню */
+        .welcome-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        /* Кастомный скроллбар */
         ::-webkit-scrollbar {
             width: 10px;
         }
@@ -310,9 +386,21 @@
 
 <body>
 
+    <!-- ГЛАВНОЕ ПРИВЕТСТВЕННОЕ МЕНЮ -->
+    <div class="welcome-overlay" id="welcomeMenu">
+        <div class="welcome-menu">
+            <h1>WELCOME TO FSS LIST</h1>
+            <p>Добро пожаловать на официальный сайт цен ценностей! Здесь ты найдёшь самую свежую статистику по
+                предметам, актуальный спрос и стабильность рынка. Удачных обменов!</p>
+            <button class="menu-btn" onclick="enterSite()">View Value List 🚀</button>
+        </div>
+    </div>
+
+    <!-- Зафиксированная шапка -->
     <div class="fixed-header">
         <div class="container">
             <header>
+                <!-- Строка с курсом валюты -->
                 <div class="value-rate-info">1 value = Bronze Bracelet [B]</div>
 
                 <h1>ULTIMATE FSS VALUE LIST</h1>
@@ -325,6 +413,7 @@
         </div>
     </div>
 
+    <!-- Основная сетка -->
     <div class="container">
         <div class="items-grid" id="itemsGrid">
             <div class="loading" id="loading">Loading database... 🚀</div>
@@ -333,6 +422,11 @@
     </div>
 
     <script>
+        // Функция закрытия меню
+        function enterSite() {
+            document.getElementById('welcomeMenu').classList.add('hidden');
+        }
+
         let allItems = [];
 
         function loadItems() {
@@ -377,14 +471,12 @@
             noResults.style.display = 'none';
 
             items.forEach(item => {
-                // Классы редкости
                 const rarity = item.rarity ? item.rarity.toLowerCase() : 'common';
                 let rarityClass = 'rarity-common';
                 if (['uncommon', 'epic', 'legendary', 'exotic', 'limited'].includes(rarity)) {
                     rarityClass = `rarity-${rarity}`;
                 }
 
-                // Добавление /10 к шкале спроса, если введено только число
                 let demandDisplay = item.demand || '0/10';
                 if (/^\d+(\.\d+)?$/.test(demandDisplay.trim())) {
                     demandDisplay = `${demandDisplay.trim()}/10`;
@@ -393,7 +485,6 @@
                 const card = document.createElement('div');
                 card.className = 'item-card';
 
-                // Подсветка границ карточки под цвет редкости при наведении
                 card.addEventListener('mouseenter', () => {
                     const colors = { common: '#7e8590', uncommon: '#2ecc71', epic: '#9b59b6', legendary: '#f1c40f', exotic: '#e74c3c', limited: '#00eeee' };
                     card.style.borderColor = colors[rarity] || '#252932';
