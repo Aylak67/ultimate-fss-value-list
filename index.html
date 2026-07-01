@@ -26,6 +26,33 @@
             padding-right: 380px;
         }
 
+        /* КАСТОМНЫЙ СТИЛЬНЫЙ СКРОЛЛБАР ДЛЯ ВСЕЙ СТРАНИЦЫ */
+        ::-webkit-scrollbar {
+            width: 10px;
+            background-color: #0b0d11;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: #161920;
+            border: 2px solid #0b0d11;
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: #00ff88;
+            /* При наведении ползунок становится неоново-зеленым */
+        }
+
+        /* Скроллбар для внутренней области сообщений чата */
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background-color: #2d3139;
+            border-radius: 3px;
+        }
+
         /* ТЕХНОЛОГИЧНЫЙ ДИЗАЙН СТАРТОВОГО МЕНЮ */
         .welcome-overlay {
             position: fixed;
@@ -895,7 +922,12 @@
 
     <div class="chat-sidebar" id="chatSidebar">
         <div class="chat-header">
-            <h3>💬 Global Chat</h3>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <h3>💬 Global Chat</h3>
+                <button onclick="changeNickname()"
+                    style="background: none; border: none; color: #94a3b8; cursor: pointer; font-size: 0.85rem; padding: 4px 8px; border-radius: 4px; background-color: rgba(255,255,255,0.03);"
+                    title="Change Nickname">⚙️ Change Nickname</button>
+            </div>
             <button class="close-chat" onclick="toggleChat()">×</button>
         </div>
 
@@ -1086,6 +1118,19 @@
             localStorage.setItem('chat_username', inp);
             localStorage.setItem('chat_uid', 'usr_' + Math.random().toString(36).substr(2, 9));
             checkChatProfile();
+        }
+
+        // Функция смены никнейма со сбросом сессии
+        function changeNickname() {
+            if (confirm("Вы уверены, что хотите изменить никнейм?")) {
+                localStorage.removeItem('chat_username');
+                localStorage.removeItem('chat_uid');
+
+                document.getElementById('chatWelcome').style.display = 'flex';
+                document.getElementById('chatMsgs').style.display = 'none';
+                document.getElementById('chatFooter').style.display = 'none';
+                document.getElementById('chatUserInp').value = '';
+            }
         }
 
         // Загрузка истории сообщений
