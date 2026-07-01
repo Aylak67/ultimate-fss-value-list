@@ -5,8 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ULTIMATE FSS VALUE LIST</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        /* Базовые стили и кастомный скроллбар */
+        /* Базовые стили */
         body {
             margin: 0;
             font-family: 'Segoe UI', Roboto, Helvetica, sans-serif;
@@ -14,12 +15,15 @@
             color: #e2e8f0;
             padding-top: 180px;
             padding-bottom: 60px;
-
-            /* Яркий фон с картинкой bg.jpg */
             background-image: linear-gradient(to bottom, rgba(11, 13, 17, 0.65), rgba(11, 13, 17, 0.88)), url('bg.jpg');
             background-attachment: fixed;
             background-size: cover;
             background-position: center;
+            transition: padding-right 0.3s ease;
+        }
+
+        body.chat-open {
+            padding-right: 380px;
         }
 
         /* ТЕХНОЛОГИЧНЫЙ ДИЗАЙН СТАРТОВОГО МЕНЮ */
@@ -47,16 +51,13 @@
             max-width: 580px;
             width: 90%;
             text-align: center;
-            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.8),
-                0 0 40px rgba(0, 255, 136, 0.05),
-                inset 0 1px 2px rgba(255, 255, 255, 0.1);
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 255, 136, 0.05), inset 0 1px 2px rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(16px);
             box-sizing: border-box;
             position: relative;
             overflow: hidden;
         }
 
-        /* Верхняя декоративная неоновая линия для стиля */
         .welcome-menu::before {
             content: '';
             position: absolute;
@@ -67,7 +68,6 @@
             background: linear-gradient(90deg, transparent, #00ff88, transparent);
         }
 
-        /* Заголовок в две строки без вылетов */
         .welcome-menu h1 {
             color: #ffffff;
             font-size: 2.4rem;
@@ -85,7 +85,6 @@
             margin-top: 5px;
         }
 
-        /* Главная кнопка View Value List */
         .menu-btn {
             background: #00ff88;
             color: #0b0d11;
@@ -96,7 +95,6 @@
             border-radius: 12px;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-            box-shadow: 0 0 0 rgba(0, 255, 136, 0);
             text-transform: uppercase;
             letter-spacing: 1.5px;
             width: 100%;
@@ -108,14 +106,9 @@
         .menu-btn:hover {
             background: #12ff93;
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 255, 136, 0.35), 0 0 10px rgba(0, 255, 136, 0.2);
+            box-shadow: 0 8px 25px rgba(0, 255, 136, 0.35);
         }
 
-        .menu-btn:active {
-            transform: translateY(1px);
-        }
-
-        /* Секция Дискорда */
         .discord-section {
             border-top: 1px solid rgba(255, 255, 255, 0.06);
             padding-top: 35px;
@@ -126,10 +119,8 @@
             font-size: 1rem;
             font-weight: 500;
             margin: 0 0 18px 0;
-            letter-spacing: 0.5px;
         }
 
-        /* Кнопка Discord */
         .discord-btn {
             display: inline-flex;
             align-items: center;
@@ -143,7 +134,6 @@
             font-weight: 700;
             border-radius: 10px;
             transition: all 0.25s ease;
-            box-shadow: 0 4px 12px rgba(88, 101, 242, 0.2);
             width: 100%;
             max-width: 260px;
             box-sizing: border-box;
@@ -161,34 +151,9 @@
             fill: currentColor;
         }
 
-        /* Плавное скрытие меню */
         .welcome-overlay.hidden {
             opacity: 0;
             visibility: hidden;
-        }
-
-        /* Кастомный скроллбар */
-        ::-webkit-scrollbar {
-            width: 10px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #0f1115;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #00ff88;
-            border-radius: 5px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #00cc6e;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
         }
 
         /* Фиксированная шапка */
@@ -204,6 +169,11 @@
             padding: 20px 0;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
             box-sizing: border-box;
+            transition: padding-right 0.3s ease;
+        }
+
+        body.chat-open .fixed-header {
+            padding-right: 380px;
         }
 
         header {
@@ -229,7 +199,6 @@
             letter-spacing: 1px;
         }
 
-        /* Курс валюты */
         .value-rate-info {
             position: absolute;
             left: 20px;
@@ -242,24 +211,22 @@
             padding: 8px 14px;
             border-radius: 8px;
             border: 1px solid rgba(0, 255, 136, 0.3);
-            text-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
-            letter-spacing: 0.5px;
         }
 
-        @media (max-width: 900px) {
-            .value-rate-info {
-                position: static;
-                transform: none;
-                display: inline-block;
-                margin-bottom: 15px;
-            }
-        }
-
-        /* Поиск */
-        .search-container {
-            position: relative;
-            max-width: 500px;
+        /* Панель управления (Калькулятор, Поиск, Чат) */
+        .controls-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            max-width: 900px;
             margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .search-container {
+            flex: 1;
+            max-width: 500px;
         }
 
         .search-input {
@@ -272,23 +239,60 @@
             font-size: 1.1rem;
             box-sizing: border-box;
             transition: all 0.3s ease;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         .search-input:focus {
             outline: none;
             border-color: #00ff88;
-            box-shadow: 0 0 20px rgba(0, 255, 136, 0.2), inset 0 2px 4px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
+        }
+
+        /* Боковые новые кнопки */
+        .side-action-btn {
+            background: #161920;
+            border: 2px solid #2d3139;
+            color: #fff;
+            padding: 14px 24px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .side-action-btn:hover {
+            border-color: #00ff88;
+            color: #00ff88;
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.15);
+            transform: translateY(-1px);
+        }
+
+        .chat-toggle-btn {
+            padding: 14px;
+            border-radius: 50%;
+            width: 52px;
+            height: 52px;
+            justify-content: center;
         }
 
         /* Сетка предметов */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
         .items-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 30px;
         }
 
-        /* Карточка */
+        /* Карточки ценностей */
         .item-card {
             background: linear-gradient(145deg, #161920, #111318);
             border: 1px solid #252932;
@@ -312,7 +316,6 @@
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            position: relative;
             border-bottom: 1px solid #222630;
         }
 
@@ -320,7 +323,6 @@
             max-width: 85%;
             max-height: 85%;
             object-fit: contain;
-            filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.5));
             transition: transform 0.3s ease;
         }
 
@@ -343,7 +345,6 @@
             font-weight: 700;
             margin: 0 0 18px 0;
             color: #fff;
-            letter-spacing: 0.5px;
         }
 
         .stat-row {
@@ -360,7 +361,6 @@
 
         .stat-label {
             color: #94a3b8;
-            font-weight: 500;
         }
 
         .stat-value {
@@ -370,15 +370,13 @@
         .value-amount {
             color: #00ff88;
             font-size: 1.15rem;
-            text-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
         }
 
         .demand-score {
             color: #ffaa00;
-            text-shadow: 0 0 10px rgba(255, 170, 0, 0.2);
-            font-size: 1.05rem;
         }
 
+        /* Теги редкости */
         .rarity-tag {
             position: absolute;
             top: 12px;
@@ -388,9 +386,7 @@
             font-size: 0.75rem;
             font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
             z-index: 10;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
         }
 
         .rarity-common {
@@ -445,6 +441,411 @@
             padding: 80px;
             font-weight: bold;
         }
+
+        /* ИНТЕРФЕЙС ВЫЕЗЖАЮЩЕГО ЧАТА (WHATSAPP STYLE) */
+        .chat-sidebar {
+            position: fixed;
+            top: 0;
+            right: -380px;
+            width: 380px;
+            height: 100%;
+            background: #101318;
+            border-left: 1px solid rgba(0, 255, 136, 0.2);
+            z-index: 10000;
+            box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            transition: right 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .chat-sidebar.open {
+            right: 0;
+        }
+
+        .chat-header {
+            padding: 20px;
+            background: #161920;
+            border-bottom: 1px solid #252932;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-header h3 {
+            margin: 0;
+            color: #00ff88;
+            font-size: 1.2rem;
+        }
+
+        .close-chat {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 1.4rem;
+            cursor: pointer;
+        }
+
+        .close-chat:hover {
+            color: #fff;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .chat-welcome-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            padding: 30px;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        .chat-welcome-screen input {
+            width: 100%;
+            padding: 12px;
+            background: #161920;
+            border: 1px solid #2d3139;
+            border-radius: 8px;
+            color: #fff;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+
+        .chat-welcome-screen button {
+            width: 100%;
+            padding: 12px;
+            background: #00ff88;
+            color: #0b0d11;
+            font-weight: 700;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        /* Стиль блоков сообщений */
+        .msg-block {
+            display: flex;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.02);
+        }
+
+        .msg-avatar {
+            width: 35px;
+            height: 35px;
+            background: #00ff88;
+            color: #0b0d11;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            text-transform: uppercase;
+            flex-shrink: 0;
+        }
+
+        .msg-body {
+            flex: 1;
+        }
+
+        .msg-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            margin-bottom: 4px;
+        }
+
+        .msg-user {
+            color: #00ff88;
+            font-weight: 700;
+        }
+
+        .msg-time {
+            color: #4a5568;
+        }
+
+        .msg-text {
+            color: #e2e8f0;
+            font-size: 0.95rem;
+            word-break: break-word;
+        }
+
+        .chat-footer {
+            padding: 15px;
+            background: #161920;
+            border-top: 1px solid #252932;
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-footer input {
+            flex: 1;
+            padding: 12px;
+            background: #101318;
+            border: 1px solid #2d3139;
+            border-radius: 8px;
+            color: #fff;
+        }
+
+        .chat-footer button {
+            background: #00ff88;
+            color: #0b0d11;
+            border: none;
+            padding: 0 18px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* ИНТЕРФЕЙС ВСПЛЫВАЮЩЕГО КАЛЬКУЛЯТОРА ОБМЕНОВ */
+        .calc-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(11, 13, 17, 0.96);
+            z-index: 101000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .calc-overlay.active {
+            display: flex;
+        }
+
+        .calc-window {
+            background: #161920;
+            width: 95%;
+            max-width: 1000px;
+            height: 85vh;
+            border-radius: 20px;
+            border: 1px solid rgba(0, 255, 136, 0.25);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+        }
+
+        .calc-header {
+            padding: 20px;
+            border-bottom: 1px solid #252932;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .calc-header h2 {
+            margin: 0;
+            color: #fff;
+        }
+
+        .calc-body {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .calc-side {
+            flex: 1;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .side-yours {
+            border-right: 1px solid #252932;
+            background: rgba(0, 255, 136, 0.01);
+        }
+
+        .side-theirs {
+            background: rgba(231, 76, 60, 0.01);
+        }
+
+        .calc-side h3 {
+            margin-top: 0;
+            display: flex;
+            justify-content: space-between;
+            color: #94a3b8;
+        }
+
+        .calc-side h3 span {
+            color: #fff;
+            font-weight: 800;
+        }
+
+        .side-yours h3 span {
+            color: #00ff88;
+        }
+
+        .side-theirs h3 span {
+            color: #e74c3c;
+        }
+
+        .calc-items-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .calc-selected-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #101318;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #252932;
+        }
+
+        .calc-selected-item button {
+            background: none;
+            border: none;
+            color: #e74c3c;
+            font-size: 1.1rem;
+            cursor: pointer;
+        }
+
+        .add-item-trigger {
+            background: rgba(255, 255, 255, 0.03);
+            border: 2px dashed #2d3139;
+            padding: 15px;
+            border-radius: 10px;
+            color: #94a3b8;
+            font-weight: bold;
+            text-align: center;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        .add-item-trigger:hover {
+            border-color: #00ff88;
+            color: #00ff88;
+        }
+
+        /* Табло вердикта по центру */
+        .calc-verdict-bar {
+            background: #101318;
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid #252932;
+            font-size: 1.5rem;
+            font-weight: 900;
+            letter-spacing: 1px;
+        }
+
+        .verdict-win {
+            color: #00ff88;
+            text-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
+        }
+
+        .verdict-fair {
+            color: #f1c40f;
+            text-shadow: 0 0 15px rgba(241, 196, 15, 0.4);
+        }
+
+        .verdict-lose {
+            color: #e74c3c;
+            text-shadow: 0 0 15px rgba(231, 76, 60, 0.4);
+        }
+
+        /* Всплывающее меню выбора предметов */
+        .selector-modal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #101318;
+            z-index: 5;
+            display: none;
+            flex-direction: column;
+            padding: 25px;
+            box-sizing: border-box;
+        }
+
+        .selector-modal.active {
+            display: flex;
+        }
+
+        .selector-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 15px;
+            overflow-y: auto;
+            margin-top: 15px;
+            padding-bottom: 20px;
+        }
+
+        .selector-card {
+            background: #161920;
+            border: 1px solid #252932;
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .selector-card:hover {
+            border-color: #00ff88;
+        }
+
+        .selector-card p {
+            margin: 8px 0 0 0;
+            font-weight: bold;
+            font-size: 0.95rem;
+        }
+
+        .selector-card span {
+            color: #00ff88;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        @media (max-width: 900px) {
+            .controls-row {
+                flex-direction: column;
+            }
+
+            .chat-sidebar {
+                width: 100%;
+                right: -100%;
+            }
+
+            body.chat-open {
+                padding-right: 0;
+            }
+
+            body.chat-open .fixed-header {
+                padding-right: 0;
+            }
+
+            .calc-body {
+                flex-direction: column;
+            }
+
+            .side-yours {
+                border-right: none;
+                border-bottom: 1px solid #252932;
+            }
+        }
     </style>
 </head>
 
@@ -453,9 +854,7 @@
     <div class="welcome-overlay" id="welcomeMenu">
         <div class="welcome-menu">
             <h1>Welcome to <span>Ultimate FSS Value List</span></h1>
-
             <button class="menu-btn" onclick="enterSite()">View Value List 🚀</button>
-
             <div class="discord-section">
                 <p class="discord-text">Support us by joining our discord server</p>
                 <a href="https://discord.gg/zwv6FGcGhy" target="_blank" class="discord-btn">
@@ -476,8 +875,13 @@
                 <h1>ULTIMATE FSS VALUE LIST</h1>
                 <p>Real-time item values & trading stats</p>
             </header>
-            <div class="search-container">
-                <input type="text" id="searchBar" class="search-input" placeholder="Search item by name...">
+
+            <div class="controls-row">
+                <button class="side-action-btn" onclick="toggleCalc(true)">⚖️ Trade Calculator</button>
+                <div class="search-container">
+                    <input type="text" id="searchBar" class="search-input" placeholder="Search item by name...">
+                </div>
+                <button class="side-action-btn chat-toggle-btn" onclick="toggleChat()">💬</button>
             </div>
         </div>
     </div>
@@ -489,14 +893,81 @@
         </div>
     </div>
 
+    <div class="chat-sidebar" id="chatSidebar">
+        <div class="chat-header">
+            <h3>💬 Global Chat</h3>
+            <button class="close-chat" onclick="toggleChat()">×</button>
+        </div>
+
+        <div class="chat-welcome-screen" id="chatWelcome">
+            <p style="color: #94a3b8; font-size: 0.95rem; margin-bottom: 20px;">Enter a nickname to join the trading
+                chat room</p>
+            <input type="text" id="chatUserInp" placeholder="Your trading nick..." maxlength="20">
+            <button onclick="initChatUsername()">Join Chat</button>
+        </div>
+
+        <div class="chat-messages" id="chatMsgs" style="display: none;"></div>
+
+        <div class="chat-footer" id="chatFooter" style="display: none;">
+            <input type="text" id="msgInput" placeholder="Type a message..." maxlength="150"
+                onkeydown="if(event.key==='Enter') sendGlobalMessage()">
+            <button onclick="sendGlobalMessage()">Send</button>
+        </div>
+    </div>
+
+    <div class="calc-overlay" id="calcOverlay">
+        <div class="calc-window">
+            <div class="calc-header">
+                <h2>⚖️ Trading Calculator</h2>
+                <button class="close-chat" style="font-size: 2rem;" onclick="toggleCalc(false)">×</button>
+            </div>
+
+            <div class="calc-body">
+                <div class="calc-side side-yours">
+                    <h3>Your Offer <span id="yourTotalVal">0</span></h3>
+                    <div class="calc-items-list" id="yourSelectedGrid"></div>
+                    <div class="add-item-trigger" onclick="openItemSelector('yours')">+ Add Item</div>
+                </div>
+
+                <div class="calc-side side-theirs">
+                    <h3>Their Offer <span id="theirTotalVal">0</span></h3>
+                    <div class="calc-items-list" id="theirSelectedGrid"></div>
+                    <div class="add-item-trigger" onclick="openItemSelector('theirs')">+ Add Item</div>
+                </div>
+            </div>
+
+            <div class="calc-verdict-bar" id="calcVerdictBox">
+                SELECT ITEMS TO CALCULATE TRADE
+            </div>
+
+            <div class="selector-modal" id="selectorModal">
+                <div class="calc-header" style="padding: 0 0 15px 0;">
+                    <h3 style="margin:0; color:#fff;">Select Item to Add</h3>
+                    <button class="close-chat" onclick="closeItemSelector()">×</button>
+                </div>
+                <input type="text" id="selectorSearch" class="search-input" placeholder="Search by name..."
+                    style="margin-bottom: 15px;">
+                <div class="selector-grid" id="selectorGrid"></div>
+            </div>
+        </div>
+    </div>
+
     <script>
+        // Инициализируем клиент Supabase
+        const _supabase = supabase.createClient("https://uuvjmqiqaxuhqyqapgqh.supabase.co", "sb_publishable_lVnTviN1ElQVy3EtJiuEiw_7vntzhn7");
+
         function enterSite() {
             document.getElementById('welcomeMenu').classList.add('hidden');
         }
 
         let allItems = [];
 
-        // Таблица приоритетов редкостей (Limited на самом верху)
+        // Калькуляторные массивы данных
+        let tradeSide = 'yours';
+        let selectedYours = [];
+        let selectedTheirs = [];
+
+        // Приоритеты для сортировки по Limited
         const rarityPriority = {
             'limited': 1,
             'exotic': 2,
@@ -506,29 +977,17 @@
             'common': 6
         };
 
+        // Загрузка основной базы
         function loadItems() {
             const loadingElement = document.getElementById('loading');
-            fetch("https://uuvjmqiqaxuhqyqapgqh.supabase.co/rest/v1/items?select=*", {
-                method: "GET",
-                headers: {
-                    "apikey": "sb_publishable_lVnTviN1ElQVy3EtJiuEiw_7vntzhn7",
-                    "Authorization": "Bearer sb_publishable_lVnTviN1ElQVy3EtJiuEiw_7vntzhn7"
-                }
-            })
-                .then(res => {
-                    if (!res.ok) throw new Error("Status " + res.status);
-                    return res.json();
-                })
-                .then(data => {
-                    // Автоматическая сортировка при получении базы
+            _supabase.from('items').select('*')
+                .then(({ data, error }) => {
+                    if (error) throw error;
+
                     allItems = data.sort((a, b) => {
                         const rarityA = a.rarity ? a.rarity.toLowerCase().trim() : 'common';
                         const rarityB = b.rarity ? b.rarity.toLowerCase().trim() : 'common';
-
-                        const priorityA = rarityPriority[rarityA] || 7;
-                        const priorityB = rarityPriority[rarityB] || 7;
-
-                        return priorityA - priorityB;
+                        return (rarityPriority[rarityA] || 7) - (rarityPriority[rarityB] || 7);
                     });
 
                     loadingElement.style.display = 'none';
@@ -558,10 +1017,7 @@
 
             items.forEach(item => {
                 const rarity = item.rarity ? item.rarity.toLowerCase().trim() : 'common';
-                let rarityClass = 'rarity-common';
-                if (['uncommon', 'epic', 'legendary', 'exotic', 'limited'].includes(rarity)) {
-                    rarityClass = `rarity-${rarity}`;
-                }
+                let rarityClass = `rarity-${rarity}`;
 
                 let demandDisplay = item.demand || '0/10';
                 if (/^\d+(\.\d+)?$/.test(demandDisplay.trim())) {
@@ -570,7 +1026,6 @@
 
                 const card = document.createElement('div');
                 card.className = 'item-card';
-
                 card.addEventListener('mouseenter', () => {
                     const colors = { common: '#7e8590', uncommon: '#2ecc71', epic: '#9b59b6', legendary: '#f1c40f', exotic: '#e74c3c', limited: '#00eeee' };
                     card.style.borderColor = colors[rarity] || '#252932';
@@ -602,10 +1057,204 @@
             });
         }
 
+        // Управление панелью чата
+        function toggleChat() {
+            const sidebar = document.getElementById('chatSidebar');
+            sidebar.classList.toggle('open');
+            document.body.classList.toggle('chat-open');
+
+            if (sidebar.classList.contains('open')) {
+                checkChatProfile();
+            }
+        }
+
+        // Проверка локального профиля пользователя для чата
+        function checkChatProfile() {
+            const savedNick = localStorage.getItem('chat_username');
+            if (savedNick) {
+                document.getElementById('chatWelcome').style.display = 'none';
+                document.getElementById('chatMsgs').style.display = 'flex';
+                document.getElementById('chatFooter').style.display = 'flex';
+                loadChatHistory();
+                listenRealtimeChat();
+            }
+        }
+
+        function initChatUsername() {
+            const inp = document.getElementById('chatUserInp').value.trim();
+            if (!inp) return;
+            localStorage.setItem('chat_username', inp);
+            localStorage.setItem('chat_uid', 'usr_' + Math.random().toString(36).substr(2, 9));
+            checkChatProfile();
+        }
+
+        // Загрузка истории сообщений
+        function loadChatHistory() {
+            _supabase.from('global_messages').select('*').order('id', { ascending: true }).limit(50)
+                .then(({ data }) => {
+                    if (data) {
+                        const box = document.getElementById('chatMsgs');
+                        box.innerHTML = '';
+                        data.forEach(m => renderSingleMsg(m));
+                        box.scrollTop = box.scrollHeight;
+                    }
+                });
+        }
+
+        // Подключаем Supabase Realtime канал
+        function listenRealtimeChat() {
+            _supabase.channel('public:global_messages')
+                .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'global_messages' }, payload => {
+                    renderSingleMsg(payload.new);
+                    const box = document.getElementById('chatMsgs');
+                    box.scrollTop = box.scrollHeight;
+                })
+                .subscribe();
+        }
+
+        function renderSingleMsg(m) {
+            const box = document.getElementById('chatMsgs');
+            const d = new Date(m.created_at);
+            const timeStr = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+            const div = document.createElement('div');
+            div.className = 'msg-block';
+            div.innerHTML = `
+                <div class="msg-avatar">${m.username[0]}</div>
+                <div class="msg-body">
+                    <div class="msg-meta">
+                        <span class="msg-user">${m.username}</span>
+                        <span class="msg-time">${timeStr}</span>
+                    </div>
+                    <div class="msg-text">${m.text}</div>
+                </div>
+            `;
+            box.appendChild(div);
+        }
+
+        // Отправка сообщений в чат
+        function sendGlobalMessage() {
+            const inp = document.getElementById('msgInput');
+            const text = inp.value.trim();
+            if (!text) return;
+
+            const username = localStorage.getItem('chat_username');
+            const user_id = localStorage.getItem('chat_uid');
+
+            _supabase.from('global_messages').insert([{ user_id, username, text }])
+                .then(() => { inp.value = ''; });
+        }
+
+        // УПРАВЛЕНИЕ КАЛЬКУЛЯТОРОМ
+        function toggleCalc(show) {
+            document.getElementById('calcOverlay').style.display = show ? 'flex' : 'none';
+        }
+
+        function openItemSelector(side) {
+            tradeSide = side;
+            document.getElementById('selectorModal').classList.add('active');
+            renderSelectorGrid(allItems);
+        }
+
+        function closeItemSelector() {
+            document.getElementById('selectorModal').classList.remove('active');
+            document.getElementById('selectorSearch').value = '';
+        }
+
+        function renderSelectorGrid(items) {
+            const grid = document.getElementById('selectorGrid');
+            grid.innerHTML = '';
+            items.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'selector-card';
+                card.innerHTML = `
+                    <p>${item.name}</p>
+                    <span>Val: ${item.value}</span>
+                `;
+                card.onclick = () => addItemToTrade(item);
+                grid.appendChild(card);
+            });
+        }
+
+        function addItemToTrade(item) {
+            if (tradeSide === 'yours') {
+                selectedYours.push(item);
+            } else {
+                selectedTheirs.push(item);
+            }
+            closeItemSelector();
+            updateTradeUI();
+        }
+
+        function removeCalcItem(side, index) {
+            if (side === 'yours') {
+                selectedYours.splice(index, 1);
+            } else {
+                selectedTheirs.splice(index, 1);
+            }
+            updateTradeUI();
+        }
+
+        // Перерасчет стоимости и вывод вердикта
+        function updateTradeUI() {
+            const yourGrid = document.getElementById('yourSelectedGrid');
+            const theirGrid = document.getElementById('theirSelectedGrid');
+
+            yourGrid.innerHTML = '';
+            theirGrid.innerHTML = '';
+
+            let totalYours = 0;
+            let totalTheirs = 0;
+
+            selectedYours.forEach((item, index) => {
+                totalYours += parseFloat(item.value || 0);
+                yourGrid.innerHTML += `
+                    <div class="calc-selected-item">
+                        <div><strong>${item.name}</strong><br><span style="color:#00ff88; font-size:0.85rem;">Val: ${item.value}</span></div>
+                        <button onclick="removeCalcItem('yours', ${index})">×</button>
+                    </div>`;
+            });
+
+            selectedTheirs.forEach((item, index) => {
+                totalTheirs += parseFloat(item.value || 0);
+                theirGrid.innerHTML += `
+                    <div class="calc-selected-item">
+                        <div><strong>${item.name}</strong><br><span style="color:#e74c3c; font-size:0.85rem;">Val: ${item.value}</span></div>
+                        <button onclick="removeCalcItem('theirs', ${index})">×</button>
+                    </div>`;
+            });
+
+            document.getElementById('yourTotalVal').innerText = totalYours;
+            document.getElementById('theirTotalVal').innerText = totalTheirs;
+
+            const verdictBox = document.getElementById('calcVerdictBox');
+            if (selectedYours.length === 0 && selectedTheirs.length === 0) {
+                verdictBox.className = 'calc-verdict-bar';
+                verdictBox.innerText = 'SELECT ITEMS TO CALCULATE TRADE';
+                return;
+            }
+
+            // Математика вычисления выгоды
+            if (totalYours === totalTheirs) {
+                verdictBox.innerHTML = `<span class="verdict-fair">🤝 FAIR TRADE (EQUAL VALUE)</span>`;
+            } else if (totalYours < totalTheirs) {
+                verdictBox.innerHTML = `<span class="verdict-win">🚀 BIG WIN (+${(totalTheirs - totalYours).toFixed(2)} VALUE)</span>`;
+            } else {
+                verdictBox.innerHTML = `<span class="verdict-lose">❌ LOSE (-${(totalYours - totalTheirs).toFixed(2)} VALUE)</span>`;
+            }
+        }
+
+        // Поисковые строки
         document.getElementById('searchBar').addEventListener('input', (e) => {
-            const searchString = e.target.value.toLowerCase();
-            const filtered = allItems.filter(item => item.name && item.name.toLowerCase().includes(searchString));
+            const str = e.target.value.toLowerCase();
+            const filtered = allItems.filter(item => item.name && item.name.toLowerCase().includes(str));
             displayItems(filtered);
+        });
+
+        document.getElementById('selectorSearch').addEventListener('input', (e) => {
+            const str = e.target.value.toLowerCase();
+            const filtered = allItems.filter(item => item.name && item.name.toLowerCase().includes(str));
+            renderSelectorGrid(filtered);
         });
 
         loadItems();
