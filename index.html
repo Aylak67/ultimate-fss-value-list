@@ -22,76 +22,147 @@
             background-position: center;
         }
 
-        /* Стиль СТАРТОВОГО ГЛАВНОГО МЕНЮ */
+        /* ТЕХНОЛОГИЧНЫЙ ДИЗАЙН СТАРТОВОГО МЕНЮ */
         .welcome-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(to bottom, rgba(11, 13, 17, 0.85), rgba(11, 13, 17, 0.98)), url('bg.jpg');
+            background: linear-gradient(to bottom, rgba(9, 10, 13, 0.88), rgba(11, 13, 17, 0.97)), url('bg.jpg');
             background-size: cover;
             background-position: center;
             z-index: 100000;
-            /* Перекрывает абсолютно всё */
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
+            transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.4s;
         }
 
         .welcome-menu {
-            background: rgba(22, 25, 32, 0.9);
-            border: 2px solid rgba(0, 255, 136, 0.3);
-            border-radius: 20px;
-            padding: 40px;
-            max-width: 600px;
+            background: linear-gradient(135deg, rgba(20, 24, 33, 0.97) 0%, rgba(13, 16, 22, 0.97) 100%);
+            border: 1px solid rgba(0, 255, 136, 0.25);
+            border-radius: 24px;
+            padding: 50px 40px;
+            max-width: 580px;
             width: 90%;
             text-align: center;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(0, 255, 136, 0.1);
-            backdrop-filter: blur(10px);
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.8),
+                0 0 40px rgba(0, 255, 136, 0.05),
+                inset 0 1px 2px rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(16px);
             box-sizing: border-box;
+            position: relative;
+            overflow: hidden;
         }
 
+        /* Верхняя декоративная неоновая линия для стиля */
+        .welcome-menu::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #00ff88, transparent);
+        }
+
+        /* Заголовок в две строки без вылетов */
         .welcome-menu h1 {
-            color: #00ff88;
-            font-size: 2.8rem;
-            margin: 0 0 10px 0;
+            color: #ffffff;
+            font-size: 2.4rem;
+            margin: 0 0 35px 0;
             font-weight: 900;
-            letter-spacing: 2px;
-            text-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+            line-height: 1.3;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
         }
 
-        .welcome-menu p {
-            color: #a0aec0;
-            font-size: 1.1rem;
-            line-height: 1.6;
-            margin: 0 0 30px 0;
+        .welcome-menu h1 span {
+            color: #00ff88;
+            display: block;
+            /* Скидывает FSS Value List на вторую строку */
+            text-shadow: 0 0 25px rgba(0, 255, 136, 0.45);
+            margin-top: 5px;
         }
 
-        /* Кнопки в меню */
+        /* Главная кнопка View Value List */
         .menu-btn {
             background: #00ff88;
-            color: #000;
+            color: #0b0d11;
             border: none;
-            padding: 16px 35px;
+            padding: 18px 45px;
             font-size: 1.2rem;
-            font-weight: bold;
-            border-radius: 10px;
+            font-weight: 800;
+            border-radius: 12px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0, 255, 136, 0.3);
+            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+            box-shadow: 0 0 0 rgba(0, 255, 136, 0);
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
+            width: 100%;
+            max-width: 340px;
+            margin-bottom: 45px;
+            display: inline-block;
         }
 
         .menu-btn:hover {
-            background: #00cc6e;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0, 255, 136, 0.5);
+            background: #12ff93;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 255, 136, 0.35), 0 0 10px rgba(0, 255, 136, 0.2);
         }
 
-        /* Состояние скрытого меню */
+        .menu-btn:active {
+            transform: translateY(1px);
+        }
+
+        /* Секция Дискорда */
+        .discord-section {
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            padding-top: 35px;
+        }
+
+        .discord-text {
+            color: #94a3b8;
+            font-size: 1rem;
+            font-weight: 500;
+            margin: 0 0 18px 0;
+            letter-spacing: 0.5px;
+        }
+
+        /* Кнопка Discord */
+        .discord-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: #5865F2;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 14px 35px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            border-radius: 10px;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 12px rgba(88, 101, 242, 0.2);
+            width: 100%;
+            max-width: 260px;
+            box-sizing: border-box;
+        }
+
+        .discord-btn:hover {
+            background: #4752C4;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(88, 101, 242, 0.45);
+        }
+
+        .discord-icon {
+            width: 22px;
+            height: 22px;
+            fill: currentColor;
+        }
+
+        /* Плавное скрытие меню */
         .welcome-overlay.hidden {
             opacity: 0;
             visibility: hidden;
@@ -121,7 +192,7 @@
             padding: 0 20px;
         }
 
-        /* Жёстко фиксированная шапка сайта на самом верху */
+        /* Фиксированная шапка */
         .fixed-header {
             position: fixed;
             top: 0;
@@ -159,7 +230,7 @@
             letter-spacing: 1px;
         }
 
-        /* Надпись курса валюты в шапке слева */
+        /* Курс валюты */
         .value-rate-info {
             position: absolute;
             left: 20px;
@@ -176,7 +247,6 @@
             letter-spacing: 0.5px;
         }
 
-        /* Адаптивность для курса при узком экране */
         @media (max-width: 900px) {
             .value-rate-info {
                 position: static;
@@ -186,7 +256,7 @@
             }
         }
 
-        /* Поисковая строка */
+        /* Поиск */
         .search-container {
             position: relative;
             max-width: 500px;
@@ -212,14 +282,14 @@
             box-shadow: 0 0 20px rgba(0, 255, 136, 0.2), inset 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
-        /* Сетка карточек предметов */
+        /* Сетка предметов */
         .items-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 30px;
         }
 
-        /* Дизайн карточки */
+        /* Карточка */
         .item-card {
             background: linear-gradient(145deg, #161920, #111318);
             border: 1px solid #252932;
@@ -235,7 +305,6 @@
             box-shadow: 0 15px 30px rgba(0, 255, 136, 0.15);
         }
 
-        /* Контейнер для изображения предмета */
         .item-image-box {
             width: 100%;
             height: 220px;
@@ -266,7 +335,6 @@
             font-size: 1.1rem;
         }
 
-        /* Информация о предмете */
         .item-info {
             padding: 22px;
         }
@@ -300,7 +368,6 @@
             font-weight: 700;
         }
 
-        /* Цвета характеристик */
         .value-amount {
             color: #00ff88;
             font-size: 1.15rem;
@@ -313,7 +380,6 @@
             font-size: 1.05rem;
         }
 
-        /* Стили для Rarity плашек */
         .rarity-tag {
             position: absolute;
             top: 12px;
@@ -328,7 +394,6 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
         }
 
-        /* Цвета неонового свечения редкостей */
         .rarity-common {
             background: #7e8590;
             color: #fff;
@@ -386,34 +451,44 @@
 
 <body>
 
-    <!-- ГЛАВНОЕ ПРИВЕТСТВЕННОЕ МЕНЮ -->
+    <!-- СТАРТОВОЕ МЕНЮ (ПЕРЕРАБОТАННЫЙ ДИЗАЙН) -->
     <div class="welcome-overlay" id="welcomeMenu">
         <div class="welcome-menu">
-            <h1>WELCOME TO FSS LIST</h1>
-            <p>Добро пожаловать на официальный сайт цен ценностей! Здесь ты найдёшь самую свежую статистику по
-                предметам, актуальный спрос и стабильность рынка. Удачных обменов!</p>
+            <!-- Разбили на 2 строки через тег span -->
+            <h1>Welcome to <span>Ultimate FSS Value List</span></h1>
+
+            <!-- Основная кнопка входа -->
             <button class="menu-btn" onclick="enterSite()">View Value List 🚀</button>
+
+            <!-- Блок Discord -->
+            <div class="discord-section">
+                <p class="discord-text">Support us by joining our discord server</p>
+                <a href="https://discord.gg/zwv6FGcGhy" target="_blank" class="discord-btn">
+                    <svg class="discord-icon" viewBox="0 0 127.14 96.36">
+                        <path
+                            d="M107.7,8.07A105.15,105.15,0,0,0,77.26,0a77.19,77.19,0,0,0-3.3,6.83A96.67,96.67,0,0,0,53.22,6.83,77.19,77.19,0,0,0,49.88,0,105.15,105.15,0,0,0,19.44,8.07C3.66,31.58-1.86,54.65,1,77.53A105.73,105.73,0,0,0,32,96.36a74.37,74.37,0,0,0,6.71-11,68.6,68.6,0,0,1-10.57-5c.88-.65,1.72-1.33,2.53-2a75.7,75.7,0,0,0,72.59,0c.81.71,1.65,1.39,2.53,2a68.6,68.6,0,0,1-10.57,5,74.37,74.37,0,0,0,6.71,11,105.73,105.73,0,0,0,31.06-18.83C129.24,48.26,123.11,25.41,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53S36.18,40.36,42.45,40.36,53.92,46,53.7,53,48.72,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.24,60,73.24,53S78.41,40.36,84.69,40.36,96.16,46,95.94,53,91,65.69,84.69,65.69Z" />
+                    </svg>
+                    Join Discord
+                </a>
+            </div>
         </div>
     </div>
 
-    <!-- Зафиксированная шапка -->
+    <!-- Фиксированная шапка -->
     <div class="fixed-header">
         <div class="container">
             <header>
-                <!-- Строка с курсом валюты -->
                 <div class="value-rate-info">1 value = Bronze Bracelet [B]</div>
-
                 <h1>ULTIMATE FSS VALUE LIST</h1>
                 <p>Real-time item values & trading stats</p>
             </header>
-
             <div class="search-container">
                 <input type="text" id="searchBar" class="search-input" placeholder="Search item by name...">
             </div>
         </div>
     </div>
 
-    <!-- Основная сетка -->
+    <!-- Сетка -->
     <div class="container">
         <div class="items-grid" id="itemsGrid">
             <div class="loading" id="loading">Loading database... 🚀</div>
@@ -422,7 +497,6 @@
     </div>
 
     <script>
-        // Функция закрытия меню
         function enterSite() {
             document.getElementById('welcomeMenu').classList.add('hidden');
         }
@@ -431,7 +505,6 @@
 
         function loadItems() {
             const loadingElement = document.getElementById('loading');
-
             fetch("https://uuvjmqiqaxuhqyqapgqh.supabase.co/rest/v1/items?select=*", {
                 method: "GET",
                 headers: {
